@@ -1,4 +1,4 @@
-EventDataBase
+EventPlanner
 =============
 
-Java Backend for storing events
+Program for creating and managing events
