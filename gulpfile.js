@@ -11,6 +11,8 @@ var serveStatic = require('serve-static');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
+var runSequence = require('run-sequence');
+
 var config = {
     app: 'app',
     build: 'build',
@@ -20,22 +22,27 @@ var config = {
         url: 'http://localhost:'
     },
 
-    files: {
-        js: [
+    html: {
+        files: [
+            'app/**/*.html',
+            '!app/bower_components/**'
+        ]
+    },
+    js: {
+        files: [
             'gulpfile.js',
             'app/**/*.js',
             '!app/bower_components/**/*.js',
             '!app/templates.js'
+        ]
+    },
+    scss: {
+        files: [
+            'app/assets/stylesheets/partials/**/*.scss'
         ],
-        scss: {
-            files: [
-                'app/**/*.scss',
-                '!app/bower_components/**/*.scss'
-            ],
-            src: 'app/app.scss',
-            devDest: 'app/app.css',
-            buildDest: 'build/app.css'
-        }
+        src: 'app/app.scss',
+        devDest: 'app/app.css',
+        buildDest: 'build/app.css'
     }
 };
 
@@ -57,7 +64,7 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('jshint', function() {
-    gulp.src(config.files.js)
+    gulp.src(config.js.files)
         .pipe($.plumber())
         .pipe($.jshint())
         .pipe($.jshint.reporter('jshint-stylish'));
@@ -103,13 +110,13 @@ gulp.task('convert', function() {
         .pipe(gulp.dest(config.app + 'bower_components/'));
 });
 
-gulp.task('scss-dev', ['convert'], function(cb) {
-    gulp.src(config.files.scss.src)
-        .pipe($.sass({
-            sourceComments: 'map',
-            sourceMap: 'sass'
-        }))
-        .pipe($.autoprefixer('last 2 versions'))
+gulp.task('scss-dev', function(cb) {
+    gulp.src(config.scss.src)
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.sass())
+        // .pipe($.autoprefixer('last 2 versions'))
+        .pipe($.sourcemaps.write())
         .pipe(gulp.dest(config.app))
         .pipe(reload({
             stream: true
@@ -118,23 +125,23 @@ gulp.task('scss-dev', ['convert'], function(cb) {
 });
 
 gulp.task('watch', ['scss-dev'], function() {
-    $.watch(config.files.scss.files, function(files, cb) {
+    $.watch(config.scss.files, function(files, cb) {
         gulp.start('scss-dev', cb);
     });
 });
 
 gulp.task('requirejs', function() {
     $.requirejs({
-        mainConfigFile: config.app + '/config.js',
-        baseUrl: config.app,
-        name: 'app',
-        out: 'app.js',
-        useStrict: true,
-        optimizeCss: 'none',
-        generateSourceMaps: false,
-        optimize: 'uglify2',
-        preserveLicenseComments: true
-    })
+            mainConfigFile: config.app + '/config.js',
+            baseUrl: config.app,
+            name: 'app',
+            out: 'app.js',
+            useStrict: true,
+            optimizeCss: 'none',
+            generateSourceMaps: false,
+            optimize: 'uglify2',
+            preserveLicenseComments: true
+        })
         .pipe(gulp.dest(config.build));
 });
 
@@ -145,12 +152,13 @@ gulp.task('test', function(done) {
     }, done);
 });
 
-gulp.task('default', [
-    'browser-sync',
-    'convert',
-    'scss-dev',
-    'watch'
-]);
+gulp.task('default', function() {
+    runSequence('convert', [
+        'browser-sync',
+        'scss-dev',
+        'watch'
+    ]);
+});
 
 gulp.task('build', []);
 
