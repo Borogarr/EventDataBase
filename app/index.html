@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <title></title>
+    <title>Event Planner</title>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,10 +12,15 @@
 </head>
 
 <body>
+    <nav>
+        <ul class="nav nav-pills nav-stacked nav-fixed">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Messages</a></li>
+        </ul>
+    </nav>
 
-    <section class="app-wrapper container-fluid" ui-view>
-        <h1>Hello World!</h1>
-    </section>
+    <main class="container-fluid main" ui-view></main>
 
     <script data-main="config.js" src="bower_components/requirejs/require.js"></script>
 </body>
