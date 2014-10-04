@@ -1,11 +1,13 @@
 // Core variables and mixins
 @import 'bootstrap/variables';
+@import 'bootswatch/variables';
+
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins';
 
 // Reset and dependencies
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/normalize';
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/print';
-@import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/glyphicons';
+// @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/glyphicons';
 
 // Core CSS
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/scaffolding';
@@ -48,3 +50,5 @@
 // Utility classes
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/utilities';
 @import '../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/responsive-utilities';
+
+@import '../../../../bower_components/bootswatch-scss/paper/bootswatch';
