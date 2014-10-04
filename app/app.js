@@ -5,6 +5,7 @@
 
         angularDependencies = [
             'ui.router',
+            'ui.bootstrap',
             'ngAnimate',
             'chieffancypants.loadingBar',
         ];
@@ -14,6 +15,7 @@
         'angular',
         'lodash',
         'ui.router',
+        'ui.bootstrap',
         'angular-animate',
         'angular-loading-bar'
     ], function(require, angular, _) {
