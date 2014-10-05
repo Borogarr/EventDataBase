@@ -4,6 +4,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var tagVersion = require('gulp-tag-version');
+var templateCache = require('gulp-angular-templatecache');
 
 var karma = require('karma').server;
 
@@ -57,32 +58,6 @@ var release = function(importance) {
         .pipe(tagVersion());
 };
 
-gulp.task('clean', function(cb) {
-    require('del')([config.build], {
-        force: true
-    }, cb);
-});
-
-gulp.task('jshint', function() {
-    gulp.src(config.js.files)
-        .pipe($.plumber())
-        .pipe($.jshint())
-        .pipe($.jshint.reporter('jshint-stylish'));
-});
-
-gulp.task('connect', function() {
-    var connect = require('connect');
-    var serveStatic = require('serve-static');
-    var app = connect()
-        .use(serveStatic(config.app));
-
-    require('http').createServer(app)
-        .listen(config.server.port)
-        .on('listening', function() {
-            console.log('Started connect web server on ' + config.server.url + config.server.port);
-        });
-});
-
 gulp.task('browser-sync', function() {
     browserSync({
         server: {
@@ -91,15 +66,25 @@ gulp.task('browser-sync', function() {
     });
 });
 
-gulp.task('copy', function() {
-    gulp.src(config.appDir + '**/*.html')
-        .pipe(gulp.dest(config.build));
+gulp.task('clean', function(cb) {
+    require('del')([config.build], {
+        force: true
+    }, cb);
 });
 
-gulp.task('open', function() {
-    var url = config.server.url + config.server.port;
-
-    require('opn')(url);
+gulp.task('compile-templates', function() {
+    gulp.src(config.html.files)
+        .pipe($.htmlmin({
+            removeComments: true,
+            collapseWhitespace: true,
+            removeEmptyAttributes: true,
+            caseSensitive: true
+        }))
+        .pipe(templateCache({
+            moduleSystem: 'RequireJS',
+            standalone: true
+        }))
+        .pipe(gulp.dest(config.app));
 });
 
 gulp.task('convert', function() {
@@ -110,24 +95,22 @@ gulp.task('convert', function() {
         .pipe(gulp.dest(config.app + 'bower_components/'));
 });
 
-gulp.task('scss-dev', function(cb) {
-    gulp.src(config.scss.src)
-        .pipe($.plumber())
-        .pipe($.sourcemaps.init())
-        .pipe($.sass())
-        // .pipe($.autoprefixer('last 2 versions'))
-        .pipe($.sourcemaps.write())
-        .pipe(gulp.dest(config.app))
-        .pipe(reload({
-            stream: true
-        }));
-    cb();
+gulp.task('copy', function() {
+    gulp.src(config.appDir + '**/*.html')
+        .pipe(gulp.dest(config.build));
 });
 
-gulp.task('watch', ['scss-dev'], function() {
-    $.watch(config.scss.files, function(files, cb) {
-        gulp.start('scss-dev', cb);
-    });
+gulp.task('jshint', function() {
+    gulp.src(config.js.files)
+        .pipe($.plumber())
+        .pipe($.jshint())
+        .pipe($.jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('open', function() {
+    var url = config.server.url + config.server.port;
+
+    require('opn')(url);
 });
 
 gulp.task('requirejs', function() {
@@ -145,6 +128,20 @@ gulp.task('requirejs', function() {
         .pipe(gulp.dest(config.build));
 });
 
+gulp.task('scss-dev', function(cb) {
+    gulp.src(config.scss.src)
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.sass())
+        // .pipe($.autoprefixer('last 2 versions'))
+        .pipe($.sourcemaps.write())
+        .pipe(gulp.dest(config.app))
+        .pipe(reload({
+            stream: true
+        }));
+    cb();
+});
+
 gulp.task('test', function(done) {
     karma.start({
         configFile: __dirname + '/karma.conf.js',
@@ -152,13 +149,21 @@ gulp.task('test', function(done) {
     }, done);
 });
 
-gulp.task('default', function() {
-    runSequence('convert', [
-        'browser-sync',
-        'scss-dev',
-        'watch'
-    ]);
+gulp.task('watch', function() {
+    $.watch(config.scss.files, function(files, cb) {
+        gulp.start('scss-dev', cb);
+    });
+    $.watch(config.html.files, function(files, cb) {
+        gulp.start('compile-templates', cb);
+    });
 });
+
+gulp.task('default', [
+    'browser-sync',
+    'compile-templates',
+    'scss-dev',
+    'watch'
+]);
 
 gulp.task('build', []);
 
