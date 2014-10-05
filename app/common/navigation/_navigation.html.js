@@ -1,0 +1,12 @@
+(function (angular) {
+	var mod = angular.module("app", ['ng']);
+
+	mod.run(["$templateCache", function ($tc) {
+
+			$tc.put("common/navigation/_navigation.html",
+				"<div class=\"navbar-header\">\n    <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-responsive-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n    </button>\n    <a class=\"navbar-brand\" href=\"#\">Brand</a>\n</div>\n<div class=\"navbar-collapse collapse navbar-responsive-collapse\">\n    <ul class=\"nav navbar-nav\">\n        <li class=\"active\"><a href=\"#\">Active</a>\n        </li>\n        <li><a href=\"#\">Link</a>\n        </li>\n        <li class=\"dropdown\">\n            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>\n            <ul class=\"dropdown-menu\">\n                <li><a href=\"#\">Action</a>\n                </li>\n                <li><a href=\"#\">Another action</a>\n                </li>\n                <li><a href=\"#\">Something else here</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li class=\"dropdown-header\">Dropdown header</li>\n                <li><a href=\"#\">Separated link</a>\n                </li>\n                <li><a href=\"#\">One more separated link</a>\n                </li>\n            </ul>\n        </li>\n    </ul>\n    <form class=\"navbar-form navbar-left\">\n        <input type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">\n    </form>\n    <ul class=\"nav navbar-nav navbar-right\">\n        <li><a href=\"#\">Link</a>\n        </li>\n        <li class=\"dropdown\">\n            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>\n            <ul class=\"dropdown-menu\">\n                <li><a href=\"#\">Action</a>\n                </li>\n                <li><a href=\"#\">Another action</a>\n                </li>\n                <li><a href=\"#\">Something else here</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li><a href=\"#\">Separated link</a>\n                </li>\n            </ul>\n        </li>\n    </ul>\n</div>\n"
+			);
+
+	}]);
+
+})(angular);

@@ -12,13 +12,7 @@
 </head>
 
 <body>
-    <nav>
-        <ul class="nav nav-pills nav-stacked nav-fixed">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Messages</a></li>
-        </ul>
-    </nav>
+    <nav class="navbar navbar-inverse" ng-controller="NavigationCtrl as Navigation" ng-include="Navigation.partial"></nav>
 
     <main class="container-fluid main" ui-view></main>
 

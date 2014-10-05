@@ -7,7 +7,11 @@
             'ui.router',
             'ui.bootstrap',
             'ngAnimate',
-            'chieffancypants.loadingBar',
+            'angular-loading-bar',
+            'templates',
+            'common',
+            'customers',
+            'events'
         ];
 
     define([
@@ -17,7 +21,11 @@
         'ui.router',
         'ui.bootstrap',
         'angular-animate',
-        'angular-loading-bar'
+        'angular-loading-bar',
+        './templates',
+        './common/common',
+        './customers/customers',
+        './events/events'
     ], function(require, angular, _) {
 
         var module = angular.module(moduleName, angularDependencies);

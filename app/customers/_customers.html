@@ -1,0 +1,27 @@
+<div ui-view>
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="text" class="form-control input-lg" placeholder="Search">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="customer in Customers.customers">
+                        <td>
+                            <a href="" ui-sref="app.customers.edit({ customerId: customer.customer_id })">{{customer.name}}</a>
+                        </td>
+                        <td>{{customer.phone_number}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
