@@ -1,7 +1,12 @@
 <div ui-view>
     <div class="row">
-        <div class="col-xs-12">
-            <input type="text" class="form-control input-lg" placeholder="Search">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input type="text" class="form-control input-lg" placeholder="Search">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <a href="" ui-sref="app.customers.edit({ customerId: 'new' })" class="btn btn-lg btn-block btn-success">New Customer</a>
         </div>
     </div>
     <div class="row">
