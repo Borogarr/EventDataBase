@@ -17,9 +17,25 @@
 
         var module = angular.module(moduleName, angularDependencies);
 
-        module.factory('CustomersResource', ['Resource',
-            function(Resource) {
-                return new Resource('customers', Customer);
+        module.factory('CustomersResource', ['Resource', '$q',
+            function(Resource, $q) {
+                var CustomersResource = new Resource('customers', Customer);
+
+                CustomersResource.newCustomer = function() {
+                    var deferred = $q.defer();
+
+                    var customer = {
+                        first_name: null,
+                        last_name: null,
+                        phone_number: null
+                    };
+
+                    deferred.resolve(new Customer(customer));
+
+                    return deferred.promise;
+                };
+
+                return CustomersResource;
             }
         ]);
 
