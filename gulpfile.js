@@ -8,43 +8,39 @@ var templateCache = require('gulp-angular-templatecache');
 
 var karma = require('karma').server;
 
-var serveStatic = require('serve-static');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
 var runSequence = require('run-sequence');
 
-var config = {
-    app: 'app',
-    build: 'build',
+var config = {};
 
-    server: {
-        port: 3000,
-        url: 'http://localhost:'
-    },
+config.app = 'app';
+config.build = 'build';
 
-    html: {
-        files: [
-            'app/**/*.html',
-            '!app/bower_components/**'
-        ]
-    },
-    js: {
-        files: [
-            'gulpfile.js',
-            'app/**/*.js',
-            '!app/bower_components/**/*.js',
-            '!app/templates.js'
-        ]
-    },
-    scss: {
-        files: [
-            'app/assets/stylesheets/partials/**/*.scss'
-        ],
-        src: 'app/app.scss',
-        devDest: 'app/app.css',
-        buildDest: 'build/app.css'
-    }
+config.html = {
+    files: [
+        'app/**/*.html',
+        '!app/bower_components/**'
+    ]
+};
+
+config.js = {
+    files: [
+        'gulpfile.js',
+        'app/**/*.js',
+        '!app/bower_components/**/*.js',
+        '!app/templates.js'
+    ]
+};
+
+config.scss = {
+    files: [
+        'app/assets/stylesheets/partials/**/*.scss'
+    ],
+    src: 'app/app.scss',
+    devDest: 'app/app.css',
+    buildDest: 'build/app.css'
 };
 
 var release = function(importance) {
@@ -105,12 +101,6 @@ gulp.task('jshint', function() {
         .pipe($.plumber())
         .pipe($.jshint())
         .pipe($.jshint.reporter('jshint-stylish'));
-});
-
-gulp.task('open', function() {
-    var url = config.server.url + config.server.port;
-
-    require('opn')(url);
 });
 
 gulp.task('requirejs', function() {
