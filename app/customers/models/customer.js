@@ -12,10 +12,7 @@
 
         Object.defineProperty(Customer.prototype, 'name', {
             get: function() {
-                if (!this.first_name || !this.last_name) {
-                    return '';
-                }
-                return this.first_name + ' ' + this.last_name;
+                return [this.first_name, this.last_name].join(' ');
             }
         });
 

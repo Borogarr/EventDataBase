@@ -5,6 +5,7 @@
 
         angularDependencies = [
             'ui.router',
+            'ngAnimate',
             'customers.edit'
         ];
 
@@ -14,6 +15,7 @@
         'lodash',
         './models/customer',
         'ui.router',
+        'angular-animate',
         './edit/edit'
     ], function(require, angular, _, Customer) {
 
@@ -40,10 +42,19 @@
             }
         ]);
 
-        module.controller('CustomersCtrl', ['customers',
-            function(customers) {
-                this.customers = customers || [];
-            }
+        function CustomersCtrl(customers) {
+            this.customers = customers;
+        }
+
+        CustomersCtrl.prototype.delete = function(customer) {
+            var index = this.customers.indexOf(customer);
+
+            this.customers.splice(index, 0);
+        };
+
+        module.controller('CustomersCtrl', [
+            'customers',
+            CustomersCtrl
         ]);
 
         return module;

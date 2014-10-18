@@ -46,28 +46,34 @@
             }
         ]);
 
-        module.controller('CustomersEditCtrl', ['CustomersResource', 'customer',
-            function(CustomersResource, customer) {
-                this.customer = customer;
+        function CustomersEditCtrl(CustomersResource, customer) {
+            this.resource = CustomersResource;
+            this.customer = customer;
+        }
 
-                this.save = function() {
-                    var save = null;
+        CustomersEditCtrl.prototype.save = function() {
+            var save = null;
 
-                    if (this.customer.customer_id !== undefined) {
-                        save = CustomersResource.update(this.customer.customer_id, this.customer);
-                    } else {
-                        save = CustomersResource.create(this.customer);
-                    }
-
-                    save.then(
-                        function success(response) {
-                            console.log(response);
-                        }, function error(response) {
-                            console.log(response);
-                        }
-                    );
-                };
+            if (this.customer.customer_id !== undefined) {
+                save = this.resource.update(this.customer.customer_id, this.customer);
+            } else {
+                save = this.resource.create(this.customer);
             }
+
+            save.then(
+                function success(response) {
+                    console.log(response);
+                },
+                function error(response) {
+                    console.log(response);
+                }
+            );
+        };
+
+        module.controller('CustomersEditCtrl', [
+            'CustomersResource',
+            'customer',
+            CustomersEditCtrl
         ]);
 
         return module;
