@@ -1,0 +1,26 @@
+@import 'orbs/variables';
+@import 'orbs/mixins';
+@import 'orbs/extends';
+
+.orb {
+    position: fixed;
+    bottom: $grid-gutter-width;
+    right: $grid-gutter-width;
+    padding: 15px;
+    color: #FFFFFF;
+    border-radius: 50%;
+    text-align: center;
+    z-index: $zindex-navbar-fixed;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16),
+                0 3px 6px rgba(0, 0, 0, 0.23);
+    transition: box-shadow .28s cubic-bezier(0.4, 0, .2, 1);
+    @include square(56px);
+
+    &:hover {
+        color: #FFFFFF;
+    }
+}
+
+.orb-success {
+    background-color: $brand-success;
+}
