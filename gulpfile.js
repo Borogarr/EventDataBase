@@ -5,13 +5,13 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var tagVersion = require('gulp-tag-version');
 var templateCache = require('gulp-angular-templatecache');
+var to5 = require('gulp-6to5');
 
 var karma = require('karma').server;
+var rjs = require('requirejs');
 
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-
-var runSequence = require('run-sequence');
 
 var config = {};
 
@@ -34,6 +34,12 @@ config.js = {
     ]
 };
 
+config.es6 = {
+    files: [
+        'app/**/*.es6.js'
+    ]
+};
+
 config.scss = {
     files: [
         'app/assets/stylesheets/partials/**/*.scss'
@@ -53,6 +59,18 @@ var release = function(importance) {
         .pipe($.filter('bower.json'))
         .pipe(tagVersion());
 };
+
+gulp.task('6to5', function() {
+    return gulp.src(config.es6.files)
+        .pipe($.sourcemaps.init())
+        .pipe($.rename(function(path) {
+            path.basename = path.basename.split('.').shift();
+            path.extname = '.js';
+        }))
+        .pipe(to5())
+        .pipe($.sourcemaps.write())
+        .pipe(gulp.dest(config.app + '/'));
+});
 
 gulp.task('browser-sync', function() {
     browserSync({
@@ -103,19 +121,21 @@ gulp.task('jshint', function() {
         .pipe($.jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('requirejs', function() {
-    $.requirejs({
-            mainConfigFile: config.app + '/config.js',
-            baseUrl: config.app,
-            name: 'app',
-            out: 'app.js',
-            useStrict: true,
-            optimizeCss: 'none',
-            generateSourceMaps: false,
-            optimize: 'uglify2',
-            preserveLicenseComments: true
-        })
-        .pipe(gulp.dest(config.build));
+// https://github.com/phated/requirejs-example-gulpfile/blob/master/gulpfile.js
+gulp.task('rjs', function(cb) {
+    rjs.optimize({
+        mainConfigFile: config.app + '/config.js',
+        baseUrl: config.app,
+        name: 'app',
+        out: 'app.js',
+        useStrict: true,
+        optimizeCss: 'none',
+        generateSourceMaps: false,
+        preserveLicenseComments: true
+    }, function(buildResponse) {
+        console.log('build response', buildResponse);
+        cb();
+    }, cb);
 });
 
 gulp.task('scss-dev', function(cb) {
@@ -140,16 +160,14 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('watch', function() {
-    $.watch(config.scss.files, function(files, cb) {
-        gulp.start('scss-dev', cb);
-    });
-    $.watch(config.html.files, function(files, cb) {
-        gulp.start('compile-templates', cb);
-    });
+    gulp.watch(config.scss.files, ['scss-dev']);
+    gulp.watch(config.html.files, ['compile-templates']);
+    gulp.watch(config.es6.files, ['6to5']);
 });
 
 gulp.task('default', [
     'browser-sync',
+    '6to5',
     'compile-templates',
     'scss-dev',
     'watch'
